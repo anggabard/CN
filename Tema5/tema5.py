@@ -270,7 +270,7 @@ class MatrixRandom:
             
 
 
-fileMat = MatrixFromFile("input\m_rar_sim_2019_500.txt")
+""" fileMat = MatrixFromFile("input\m_rar_sim_2019_500.txt")
 randMat = MatrixRandom(500)
 if  randMat.compareMatrix(randMat.getTranspose(),randMat.dimension) == True:
     randMat.powerMethod()
@@ -279,4 +279,41 @@ else:
 if fileMat.compareMatrix(fileMat.getTranspose(),fileMat.dimension) == True:
     fileMat.powerMethod()
 else:
-    print("Matricea din fisier nu este simetrica") 
+    print("Matricea din fisier nu este simetrica")  """
+A = np.array([[1,2,3],[2,3,3],[4,2,1],[2,1,3]])
+b = np.array([1,2,3,4])
+U,S,V = np.linalg.svd(A)
+mooreMatrix = np.linalg.pinv(A)
+
+rangMatrix = 0 
+singularValues = []
+minSingularValue = -1
+maxSingularValue = -1 
+
+for element in S:
+    if element >= 0: 
+        singularValues.append(element)
+        rangMatrix += 1
+        if element < minSingularValue or minSingularValue == -1:
+            minSingularValue = element
+        if element > maxSingularValue:
+            maxSingularValue = element
+
+print ("Valorile singulare ale matricii A pentru p > n sunt: " +  str(singularValues))
+print ("Rangul matricii A comform calculelor noastre este: " + str(rangMatrix))
+print ("Rangul matricii A comform numpy este: " + str(np.linalg.matrix_rank(A)))
+print ("Numarul de conditionare al matricii A comform calculelor noastre este: " + str(maxSingularValue/ minSingularValue))
+print ("Numarul de conditionare al matricii A comform numpy este: " + str(np.linalg.cond(A)))
+
+print ("Pseudoinversa Moore-Penrose a matricei A este: ")
+
+x = mooreMatrix.dot(b)
+print("Solutia sistemului Ax = b: " + str(x ))
+
+Ax = A.dot(x)
+equationResult = []
+
+for index in range(len(Ax)):
+    equationResult.append(b[index] - Ax[index])
+
+print("Norma ecuatiei b − Ax este: " + str(np.linalg.norm(equationResult)))
